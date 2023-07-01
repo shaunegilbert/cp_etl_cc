@@ -1,6 +1,6 @@
 import paramiko
 import os
-from utils.get_secret import get_secret
+from src.utils.get_secret import get_secret
 
 def load_credentials(secret_name):
     return get_secret(secret_name)

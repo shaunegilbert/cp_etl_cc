@@ -1,9 +1,14 @@
-from src.data import 
+import logging
+from src.data import sftp_read
 
 def main():
     try:
-        # Call the main function of each script
-
-
+        sftp_read.test()
     except Exception as e:
-        logging.error(f"Script failed to run. Error: {str(e)}")
+        print(f'Failed: {str(e)}')
+
+
+if __name__ == "__main__":
+    main()
+
+
