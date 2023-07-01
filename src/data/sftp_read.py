@@ -8,29 +8,6 @@ from src.utils.sftp_utils import (
     download_files,
     close_connection)
 
-# from dotenv import load_dotenv
-
-# load_dotenv()
-
-# def test():
-#     ehps_creds = load_credentials('ehps_sftp')
-
-#     print(ehps_creds)
-
-def ehps_pull():
-    try:
-        ehps_creds = load_credentials("ehps_sftp")  # Replace with actual secret name
-        ehps_sftp = establish_sftp_connection(ehps_creds)
-        ehps_files = fetch_files(ehps_sftp, '/ehps_uploads/', '.txt')
-        download_files(ehps_sftp, ehps_files, '/ehps_uploads/', ".", prefix="")
-
-        # Convert EHPS .txt files to CSV
-        convert_files_to_csv(ehps_files)
-
-        close_connection(ehps_sftp)
-    except Exception as e:
-        print(f'Failed: {str(e)}')
-
 def convert_files_to_csv(files):
     for file in files:
         if file.endswith('.txt'):
@@ -44,9 +21,29 @@ def convert_files_to_csv(files):
 
             os.remove(txt_file_path)
 
+def ehps_pull():
+    try:
+        ehps_creds = load_credentials("ehps_sftp")
+        ehps_sftp = establish_sftp_connection(ehps_creds)
+        ehps_files = fetch_files(ehps_sftp, '/ehps_uploads/', '.txt')
+        download_files(ehps_sftp, ehps_files, '/ehps_uploads/', ".", prefix="")
+
+        # Convert EHPS .txt files to CSV
+        convert_files_to_csv(ehps_files)
+
+        close_connection(ehps_sftp)
+    except Exception as e:
+        print(f'Failed: {str(e)}')
+
+def hps_pull():
+    try:
+        hps_creds = load_credentials("hps_sftp")
+        hps_sftp = establish_sftp_connection(hps_creds)
+        ehps_files = fetch_files(hps_sftp, '/hps_uploads/')
+
 def main():
     ehps_pull()
-    convert_files_to_csv()
 
 if __name__ == "__main__":
     main()
+
