@@ -3,7 +3,7 @@ from src.data import sftp_read
 
 def main():
     try:
-        sftp_read.test()
+        sftp_read.main()
     except Exception as e:
         print(f'Failed: {str(e)}')
 
