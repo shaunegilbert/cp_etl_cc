@@ -3,26 +3,49 @@ import pandas as pd
 import numpy as np
 import os
 from dotenv import load_dotenv
+from typing import List
 
 load_dotenv()
 
-def sheets_data_pull():
+def agreement_pull():
     # pull staggered data entry personal info (JAWS) from google sheets
-    sde_personal_info_query = os.getenv('sde_personal_info_query')
+    cp_agreements_query = os.getenv('cp_agreements_query')
     sheet = service.spreadsheets()
-    results_sde_personal_info = sheet.values().get(spreadsheetId = sde_personal_info_query,
-                                range="Data!A1:Z").execute()
-    sde_personal_info = results_sde_personal_info.get('values', [])
-    sde_personal_info = pd.DataFrame(sde_personal_info[1:], columns=sde_personal_info[0]).fillna(np.nan)
-    sde_personal_info.to_csv('data/raw/sde_personal_info.csv', index=False)
+    results_cp_agreements = sheet.values().get(spreadsheetId = cp_agreements_query,
+                                range="agreement_query!A1:Z").execute()
+    cp_agreements = results_cp_agreements.get('values', [])
+    cp_agreements = pd.DataFrame(cp_agreements[1:], columns=cp_agreements[0]).fillna(np.nan)
+    cp_agreements.to_csv('data/raw/cp_agreements.csv', index=False)
 
-    # pull workshop attendance (JAWS) from google sheets
-    s50_workshop_attendance_query = os.getenv('s50_workshop_attendance_query')
+
+def app_pull(service, form_names: List[str], root_dir='data/raw'):
     sheet = service.spreadsheets()
-    results_workshop_attendance = sheet.values().get(spreadsheetId = s50_workshop_attendance_query,
-                                range="Data!A1:Z").execute()
-    workshop_attendance = results_workshop_attendance.get('values', [])
-    workshop_attendance = pd.DataFrame(workshop_attendance[1:], columns=workshop_attendance[0]).fillna(np.nan)
-    workshop_attendance.to_csv('data/raw/workshop_attendance.csv', index=False)
+    for form_name in form_names:
+        google_form_id = os.getenv(f'{form_name}_google_form') # Get the Google form ID from environment variables
+        if google_form_id is None:
+            print(f"Couldn't find environment variable for {form_name}_google_form")
+            continue
+        # Get the data
+        form_name_without_app = form_name.replace("_app", "")
+        results = sheet.values().get(spreadsheetId=google_form_id, range="{}_application!A1:Z".format(form_name_without_app)).execute()
+        data = results.get('values', [])
+        df = pd.DataFrame(data[1:], columns=data[0]).fillna(np.nan)
+        # Save to CSV
+        output_filename = os.path.join(root_dir, f'app_{form_name_without_app}.csv') # Changed the output file name
+        df.to_csv(output_filename, index=False)
 
+# Define the form names
+form_names = ['bhs_app', 'bps_app', 'ehps_app', 'gp_app', 'hphs_app', 'nb_app', 'pa_app', 'whs_app']
+
+# Call the function
+app_pull(service, form_names)
+
+def main():
+    agreement_pull()
+    form_names = ['bhs_app', 'bps_app', 'ehps_app', 'gp_app', 'hphs_app', 'nb_app', 'pa_app', 'whs_app']
+    app_pull(service, form_names)
+
+
+if __name__ == "__main__":
+    main()
 
