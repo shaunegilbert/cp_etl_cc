@@ -39,10 +39,17 @@ def hps_pull():
     try:
         hps_creds = load_credentials("hps_sftp")
         hps_sftp = establish_sftp_connection(hps_creds)
-        ehps_files = fetch_files(hps_sftp, '/hps_uploads/')
+        hps_files = fetch_files(hps_sftp, '/hps_uploads/', '.csv')
+        download_files(hps_sftp, hps_files, '/hps_uploads/', ".", prefix="")
+
+        
+        close_connection(hps_sftp)
+    except Exception as e:
+        print(f'Failed: {str(e)}')
 
 def main():
     ehps_pull()
+    hps_pull()
 
 if __name__ == "__main__":
     main()
