@@ -1,13 +1,18 @@
 import logging
+import traceback
 from src.data import sftp_read
 from src.data import sheets_read
+from src.data import agreement_wrangle
 
 def main():
     try:
         sftp_read.main()
         sheets_read.main()
+        agreement_wrangle.main()
+        print("All scripts ran successfully.")
     except Exception as e:
-        print(f'Failed: {str(e)}')
+        print("Error occurred:")
+        traceback.print_exc()
 
 if __name__ == "__main__":
     main()
