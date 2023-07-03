@@ -40,7 +40,7 @@ def hps_pull():
         hps_creds = load_credentials("hps_sftp")
         hps_sftp = establish_sftp_connection(hps_creds)
         hps_files = fetch_files(hps_sftp, '/hps_uploads/', '.csv')
-        download_files(hps_sftp, hps_files, '/hps_uploads/', ".", prefix="")
+        download_files(hps_sftp, hps_files, '/hps_uploads/', ".", prefix="hps_")
 
         
         close_connection(hps_sftp)
