@@ -40,22 +40,22 @@ form_names = ['bhs_app', 'bps_app', 'ehps_app', 'gp_app', 'hphs_app', 'nb_app', 
 # Call the function
 app_pull(service, form_names)
 
-# pull students_table (JAWS)
-def students_pull():
-    # pull staggered data entry personal info (JAWS) from google sheets
-    students_compare_query = os.getenv('students_compare_query')
-    sheet = service.spreadsheets()
-    results_students_compare = sheet.values().get(spreadsheetId = students_compare_query,
-                                range="data!A1:Z").execute()
-    students_compare = results_students_compare.get('values', [])
-    students_compare = pd.DataFrame(students_compare[1:], columns=students_compare[0]).fillna(np.nan)
-    students_compare.to_csv('data/raw/students_compare.csv', index=False)
+# # pull _cp_etl_sftp_comparison (JAWS)
+# def students_pull():
+#     # pull staggered data entry personal info (JAWS) from google sheets
+#     students_compare_query = os.getenv('students_compare_query')
+#     sheet = service.spreadsheets()
+#     results_students_compare = sheet.values().get(spreadsheetId = students_compare_query,
+#                                 range="data!A1:Z").execute()
+#     students_compare = results_students_compare.get('values', [])
+#     students_compare = pd.DataFrame(students_compare[1:], columns=students_compare[0]).fillna(np.nan)
+#     students_compare.to_csv('data/raw/students_compare.csv', index=False)
 
 def main():
     agreement_pull()
     form_names = ['bhs_app', 'bps_app', 'ehps_app', 'gp_app', 'hphs_app', 'nb_app', 'pa_app', 'whs_app']
     app_pull(service, form_names)
-    students_pull()
+    # students_pull()
 
 
 if __name__ == "__main__":
