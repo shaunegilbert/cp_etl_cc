@@ -79,6 +79,11 @@ def hps_wrangle():
 
 def merge_students(ehps_students, hps_students):
     merged_students = pd.concat([ehps_students, hps_students], axis=0, ignore_index=True)
+    
+    # add gt_id to merged students
+    merged_students['id_number'] = merged_students['id_number'].astype(str).str.replace('.0', '', regex=False)
+    merged_students['gt_id'] = merged_students['district_code'] + merged_students['id_number'].astype(str)
+
     merged_students.to_csv('data/processed/sftp_students.csv', index=False)
     return merged_students
 
