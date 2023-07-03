@@ -27,7 +27,7 @@ def app_pull(service, form_names: List[str], root_dir='data/raw'):
             continue
         # Get the data
         form_name_without_app = form_name.replace("_app", "")
-        results = sheet.values().get(spreadsheetId=google_form_id, range="{}_application!A1:Z".format(form_name_without_app)).execute()
+        results = sheet.values().get(spreadsheetId=google_form_id, range="{}_application!A1:AH".format(form_name_without_app)).execute()
         data = results.get('values', [])
         df = pd.DataFrame(data[1:], columns=data[0]).fillna(np.nan)
         # Save to CSV
@@ -39,6 +39,8 @@ form_names = ['bhs_app', 'bps_app', 'ehps_app', 'gp_app', 'hphs_app', 'nb_app', 
 
 # Call the function
 app_pull(service, form_names)
+
+# 
 
 def main():
     agreement_pull()
