@@ -41,7 +41,6 @@ form_names = ['bhs_app', 'bps_app', 'ehps_app', 'gp_app', 'hphs_app', 'nb_app', 
 app_pull(service, form_names)
 agreement_pull()
 
-
 def main():
     form_names = ['bhs_app', 'bps_app', 'ehps_app', 'gp_app', 'hphs_app', 'nb_app', 'pa_app', 'whs_app']
     app_pull(service, form_names)
